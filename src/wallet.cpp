@@ -2117,7 +2117,7 @@ namespace lwsf { namespace internal
     return out.str();
   }
 
-#ifndef LWSF_MASTER_ENABLE
+  // NOTE: These functions are always needed for Wownero (they're pure virtual in wallet2_api.h)
   bool wallet::lightWalletLogin(bool &isNewWallet) const
   {
     isNewWallet = false;
@@ -2158,5 +2158,5 @@ namespace lwsf { namespace internal
     return true;
   }
 #endif // LWSF_MASTER_ENABLE
- 
+
 }} // lwsf // internal

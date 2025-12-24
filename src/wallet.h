@@ -747,13 +747,11 @@ namespace internal
     //! secondary key reuse mitigation
     virtual void keyReuseMitigation2(bool mitigation) override {  /* TODO */ }
 
-#ifndef LWSF_MASTER_ENABLE
     //! Light wallet authenticate and login
     virtual bool lightWalletLogin(bool &isNewWallet) const override;
 
     //! Initiates a light wallet import wallet request
     virtual bool lightWalletImportWalletRequest(std::string &payment_id, uint64_t &fee, bool &new_request, bool &request_fulfilled, std::string &payment_address, std::string &status) override;
-#endif // LWSF_MASTER_ENABLE
 
     //! locks/unlocks the keys file; returns true on success
     virtual bool lockKeysFile() override { return false; }
