@@ -444,17 +444,7 @@ namespace internal
      */
     virtual std::string exchangeMultisigKeys(const std::vector<std::string> &info, const bool force_update_use_with_caution) override { /* TODO */ return {}; }
 
-#ifdef LWSF_MASTER_ENABLE
-    /**
-     * @brief getMultisigKeyExchangeBooster - obtain partial information for the key exchange round after the in-progress round,
-     *                                        to speed up another signer's key exchange process
-     * @param info - base58 encoded key derivations returned by makeMultisig or exchangeMultisigKeys function call
-     * @param threshold - number of required signers to make valid transaction. Must be <= number of participants.
-     * @param num_signers - total number of multisig participants.
-     * @return new info string if more rounds required or exception if no more rounds (i.e. no rounds to boost)
-     */
-    virtual std::string getMultisigKeyExchangeBooster(const std::vector<std::string> &info, const uint32_t threshold, const uint32_t num_signers) override { /* TODO */ return {}; }
-#endif // LWSF_MASTER_ENABLE
+    // NOTE: getMultisigKeyExchangeBooster removed - not available in Wownero's wallet2_api.h
 
     /**
      * @brief exportMultisigImages - exports transfers' key images
