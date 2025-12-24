@@ -1,4 +1,5 @@
 # Copyright (c) 2024-2025, The Monero Project
+# Copyright (c) 2024-2025, The Wownero Project
 #
 # All rights reserved.
 #
@@ -27,7 +28,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 cmake_minimum_required(VERSION 3.5.0)
-project(lwsf)
+project(lwsf-wow)
 
 enable_language(CXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -46,7 +47,7 @@ if(NOT LWSF_SANITIZER STREQUAL "OFF")
 endif()
 
 if (NOT MONERO_SOURCE_DIR)
-  message(FATAL_ERROR "The argument -DMONERO_SOURCE_DIR must specify a location of a monero source tree")
+  message(FATAL_ERROR "The argument -DMONERO_SOURCE_DIR must specify a location of a wownero source tree")
 endif()
 
 cmake_path(CONVERT "${MONERO_SOURCE_DIR}" TO_CMAKE_PATH_LIST MONERO_SOURCE_DIR_CONVERTED)

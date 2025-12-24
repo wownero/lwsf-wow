@@ -1,4 +1,5 @@
 // Copyright (c) 2024, The Monero Project
+// Copyright (c) 2024, The Wownero Project
 // 
 // All rights reserved.
 // 
@@ -57,7 +58,7 @@ namespace lwsf { namespace config
   constexpr const std::size_t max_ring_size_in_rpc = 128;
   constexpr const std::size_t max_txes_in_rpc = 2048;
   constexpr const std::size_t min_outputs = 2;
-  constexpr const std::uint32_t mixin_default = 15;
+  constexpr const std::uint32_t mixin_default = 21; // Wownero ring size 22 (mixin + 1)
   constexpr const std::chrono::seconds refresh_interval{30};
   constexpr const std::chrono::seconds refresh_interval_min{5};
   constexpr const std::chrono::seconds rpc_timeout{30};

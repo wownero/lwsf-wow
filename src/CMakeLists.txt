@@ -1,4 +1,5 @@
 # Copyright (c) 2024, The Monero Project
+# Copyright (c) 2024, The Wownero Project
 #
 # All rights reserved.
 #

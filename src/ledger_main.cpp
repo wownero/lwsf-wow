@@ -268,14 +268,14 @@ namespace
       const std::string& account = label.empty() ? std::to_string(info->subaddrAccount()) : label;
       if (info->direction() == Monero::TransactionInfo::Direction_In)
       { 
-        std::cout << "    Assets:Monero:" << account << "      " << cryptonote::print_money(info->amount()) << " XMR" << std::endl;
+        std::cout << "    Assets:Wownero:" << account << "      " << cryptonote::print_money(info->amount()) << " WOW" << std::endl;
         std::cout << "    Income" << std::endl;
       }
       else
       {
-        std::cout << "    Expenses             " << cryptonote::print_money(info->amount()) << " XMR " << std::endl;
-        std::cout << "    Expenses:Monero:Fee  " << cryptonote::print_money(info->fee()) << " XMR" << std::endl;
-        std::cout << "    Assets:Monero:" << account << std::endl;
+        std::cout << "    Expenses             " << cryptonote::print_money(info->amount()) << " WOW " << std::endl;
+        std::cout << "    Expenses:Wownero:Fee  " << cryptonote::print_money(info->fee()) << " WOW" << std::endl;
+        std::cout << "    Assets:Wownero:" << account << std::endl;
       }
     }
   }
