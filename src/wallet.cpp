@@ -2202,6 +2202,5 @@ namespace lwsf { namespace internal
     status = std::move(import->status);
     return true;
   }
-#endif // LWSF_MASTER_ENABLE
 
 }} // lwsf // internal
