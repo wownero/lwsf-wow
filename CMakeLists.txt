@@ -29,6 +29,8 @@
 
 cmake_minimum_required(VERSION 3.5.0)
 project(lwsf-wow)
+# Subdirectories refer to the upstream project name.
+set(lwsf_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
 
 enable_language(CXX)
 set(CMAKE_CXX_STANDARD 17)
