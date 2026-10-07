@@ -229,6 +229,14 @@ namespace internal
      */
     virtual bool init(const std::string &daemon_address, uint64_t, const std::string &daemon_username = "", const std::string &daemon_password = "", bool use_ssl = false, bool lightWallet = false, const std::string &proxy_address = "") override;
 
+#ifdef LWSF_MASTER_ENABLE
+    virtual void allowMismatchedDaemonVersion(bool allow_mismatch) override
+    {}
+
+    virtual void setRingDatabase(const std::string &path) override
+    { throw std::logic_error{"lwsf does not support ring database"}; }
+#endif
+
    /*!
     * \brief createWatchOnly - Creates a watch only wallet
     * \param path - where to store the wallet
@@ -690,6 +698,14 @@ namespace internal
      * \return true if the signature verified, false otherwise
      */
     virtual bool verifySignedMessage(const std::string &message, const std::string &addres, const std::string &signature) const override { /* TODO */ return false; }
+    /*!
+     * \brief verifySignedMessageWithDetails - verify a signature and identify the signing key and algorithm
+     * \param message - the message (arbitrary byte data)
+     * \param address - the address the signature claims to be made with
+     * \param signature - the signature
+     * \return the verification result, including the signature version and key type
+     */
+    virtual MessageSignatureResult verifySignedMessageWithDetails(const std::string &message, const std::string &address, const std::string &signature) const override { return {}; }
 
     /*!
      * \brief signMultisigParticipant   signs given message with the multisig public signer key

@@ -55,6 +55,7 @@
 #include <system_error>
 #include <utility>
 
+#include "cryptonote_basic/cryptonote_basic_impl.h" // monero/src
 #include "hex.h"                    // monero/contrib/include
 #include "rapidjson/document.h"     // monero/external/rapidjson/include
 #include "rapidjson/error/en.h"     // monero/external/rapidjson/include
@@ -443,6 +444,20 @@ LWS_CASE("backend::wallet (non-websocket)")
 
     tcp::acceptor acceptor{io, tcp::endpoint(tcp::v4(), 0)};
     acceptor.listen();
+
+    SECTION("primary keys match the primary address")
+    {
+      // construct_tx compares the change destination against the sender's own address,
+      // built from these keys. With spend and view swapped, every send with change failed.
+      const cryptonote::account_keys keys = wallet->get_primary_keys();
+      EXPECT(keys.m_account_address.m_spend_public_key == wallet->primary.spend.pub);
+      EXPECT(keys.m_account_address.m_view_public_key == wallet->primary.view.pub);
+      EXPECT(keys.m_account_address == wallet->get_spend_account({0, 0}));
+      EXPECT(
+        cryptonote::get_account_address_as_str(wallet->get_net_type(), false, keys.m_account_address) ==
+        wallet->primary.address
+      );
+    }
 
     SECTION("uninitialized http client")
     {

@@ -40,9 +40,11 @@
 #include "cryptonote_basic/cryptonote_format_utils.h" // monero/src
 #include "error.h"
 #include "hex.h"               // monero/src
+#include "int-util.h"          // monero/contrib/epee/include
 #include "lwsf_config.h"
 #include "net/websocket.h"
 #include "ringct/rctOps.h"
+#include "utils/ascii.h"
 #include "wire.h"
 #include "wire/adapted/crypto.h"
 #include "wire/adapted/pair.h"
@@ -715,8 +717,19 @@ namespace lwsf { namespace internal { namespace backend
       if (!merged.new_transactions.empty() || new_height - orig_height)
         listener.updated();
 
-      for (std::uint64_t i = orig_height; i < new_height; ++i)
+      // Call `listener.newBlock` a max of `config::notify_block_limit` times
+      const std::uint64_t diff = new_height - orig_height;
+      const std::uint64_t shift =
+        std::max(diff / config::notify_block_limit, std::uint64_t(1));
+      for (std::uint64_t i = orig_height; i < new_height; i += shift)
+      {
         listener.newBlock(i);
+        if (std::numeric_limits<std::uint64_t>::max() - shift < i)
+          break;
+      }
+
+      if (diff && diff % shift != 0)
+        listener.newBlock(new_height - 1);
 
       for (const auto& tx : merged.new_transactions)
       {
@@ -1527,7 +1540,7 @@ namespace lwsf { namespace internal { namespace backend
   cryptonote::account_keys wallet::get_primary_keys() const
   {
     return {
-      {primary.view.pub, primary.spend.pub}, primary.spend.sec, primary.view.sec
+      {primary.spend.pub, primary.view.pub}, primary.spend.sec, primary.view.sec
     }; 
   }
 
@@ -1827,7 +1840,7 @@ namespace lwsf { namespace internal { namespace backend
               {
   ws_connect:
                 BOOST_ASIO_CORO_YIELD self.client.ws_async(
-                  rpc::feed::endpoint(), rpc::feed::protocol(), store(&self.feed, wrap(self_ptr, *this))
+                  rpc::feed::endpoint(), rpc::feed::protocol(), wrap(self_ptr, store(&self.feed, wrap(self_ptr, *this)))
                 );
 
                 if (!error && self.feed)
@@ -1867,7 +1880,7 @@ namespace lwsf { namespace internal { namespace backend
             }
           }
 
-          frame_->orig_scan_height = self.primary.scan_height;
+          frame_->orig_scan_height = std::max(self.primary.scan_height, self.primary.restore_height);
           frame_->login = rpc::login{self.primary.address, self.primary.view.sec};
           BOOST_ASIO_CORO_YIELD rpc::invoke_async(
             self.client, frame_->login, std::addressof(frame_->txs_response), wrap(self_ptr, *this)
@@ -2399,7 +2412,12 @@ namespace lwsf { namespace internal { namespace backend
             std::addressof(frame_->response),
             *this
           );
-          frame_->f(error);
+          if (error)
+            frame_->f(error);
+          else if (!ascii_nocase_compare(frame_->response.status, "OK"))
+            frame_->f(error::send_not_ok);
+          else
+            frame_->f({});
         }
       }
     };
